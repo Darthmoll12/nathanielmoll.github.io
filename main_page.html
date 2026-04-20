@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nathaniel Moll — Computational Biophysics & ML</title>
+<meta name="description" content="Nathaniel Moll — undergraduate researcher in computational biophysics, machine learning for molecular systems, and multi-sensor data fusion." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0d0c;
+    --bg-elev: #0f1413;
+    --bg-card: #111716;
+    --border: #1f2a28;
+    --border-bright: #2a3936;
+    --ink: #e6ebe9;
+    --ink-dim: #8a9693;
+    --ink-faint: #5a6663;
+    --accent: #7dffb3;
+    --accent-dim: #4aaa76;
+    --accent-glow: rgba(125, 255, 179, 0.12);
+    --warn: #ffb347;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Grid background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Subtle grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ─── NAV ─────────────────────────────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    background: rgba(10, 13, 12, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 16px 0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .logo::before { content: '▸ '; color: var(--accent-dim); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .nav-links a {
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a::before { content: '/ '; color: var(--ink-faint); }
+
+  /* ─── HERO ────────────────────────────────────── */
+  .hero {
+    padding: 120px 0 100px;
+    position: relative;
+  }
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s forwards;
+  }
+  .meta-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent-dim);
+  }
+  .pulse {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+    margin-left: 4px;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+    max-width: 920px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.25s forwards;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-feature-settings: "ss01";
+  }
+
+  .hero-lede {
+    font-size: 19px;
+    color: var(--ink-dim);
+    max-width: 640px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.45s forwards;
+  }
+  .hero-lede strong { color: var(--ink); font-weight: 500; }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 14px 22px;
+    border: 1px solid var(--border-bright);
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+  .btn .arrow { transition: transform 0.25s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* ─── FOCUS CONFIG BLOCK ──────────────────────── */
+  .focus-block {
+    margin: 48px 0 0;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.75s forwards;
+  }
+  .config {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    padding: 22px 26px;
+    max-width: 720px;
+    line-height: 1.9;
+  }
+  .config .k { color: var(--accent-dim); }
+  .config .v { color: var(--ink); }
+  .config .c { color: var(--ink-faint); }
+
+  /* ─── SECTIONS ─────────────────────────────────── */
+  section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    position: relative;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .section-title em { color: var(--accent); font-style: italic; }
+  .section-sub {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-left: auto;
+  }
+
+  /* ─── ABOUT / STATEMENT ─────────────────────── */
+  .statement {
+    max-width: 780px;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+  .statement p + p { margin-top: 22px; }
+  .statement .highlight {
+    color: var(--accent);
+    font-family: var(--serif);
+    font-style: italic;
+  }
+
+  /* ─── PROJECTS ────────────────────────────────── */
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .project {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 40px;
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    transition: background 0.3s;
+    position: relative;
+  }
+  .project:last-child { border-bottom: 1px solid var(--border); }
+  .project:hover { background: rgba(125, 255, 179, 0.02); }
+  .project-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
+  .project-meta .date { color: var(--accent-dim); display: block; margin-bottom: 4px; }
+  .project-meta .inst { color: var(--ink-dim); display: block; }
+  .project-meta .tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .project-meta .tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border: 1px solid var(--border-bright);
+    color: var(--ink-dim);
+    border-radius: 2px;
+  }
+  .project-body h3 {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .project-body .status {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-upcoming { background: var(--warn); color: var(--bg); }
+  .status-active { background: var(--accent); color: var(--bg); }
+  .status-complete { border: 1px solid var(--border-bright); color: var(--ink-dim); }
+  .project-body p {
+    color: var(--ink-dim);
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+  .project-body ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .project-body li {
+    color: var(--ink-dim);
+    font-size: 14.5px;
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .project-body li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-dim);
+    font-family: var(--mono);
+  }
+  .project-body li strong { color: var(--ink); font-weight: 500; }
+
+  /* ─── PUBLICATIONS ─────────────────────────────── */
+  .pubs { display: flex; flex-direction: column; }
+  .pub {
+    padding: 28px 0;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 32px;
+    align-items: baseline;
+  }
+  .pub:last-child { border-bottom: 1px solid var(--border); }
+  .pub-year {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent-dim);
+  }
+  .pub-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .pub-venue {
+    color: var(--ink-dim);
+    font-size: 14px;
+    margin-top: 6px;
+    font-family: var(--sans);
+  }
+  .pub-type {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border: 1px solid var(--border-bright);
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  /* ─── CONTACT ───────────────────────────────────── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 820px;
+  }
+  .contact-card {
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    padding: 28px;
+    transition: border-color 0.25s;
+    position: relative;
+  }
+  .contact-card:hover { border-color: var(--accent-dim); }
+  .contact-card .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .contact-card a {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+    text-decoration: none;
+    word-break: break-all;
+    transition: color 0.2s;
+    display: block;
+  }
+  .contact-card a:hover { color: var(--accent); }
+  .contact-card .note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 10px;
+  }
+
+  /* ─── FOOTER ──────────────────────────────────── */
+  footer {
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer .sig { color: var(--ink-dim); }
+
+  /* ─── ANIMATIONS ──────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── RESPONSIVE ──────────────────────────────── */
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .hero { padding: 70px 0 60px; }
+    section { padding: 70px 0; }
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 11px; }
+    .project { grid-template-columns: 1fr; gap: 16px; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 10.5px; }
+    .project-meta .date, .project-meta .inst { display: inline; }
+    .pub { grid-template-columns: 1fr; gap: 8px; }
+    .pub-type { justify-self: start; }
+    .contact-grid { grid-template-columns: 1fr; gap: 16px; }
+    .section-head { margin-bottom: 36px; }
+    .section-sub { display: none; }
+    h1 { font-size: 44px; }
+  }
+
+  /* ─── SELECTION ───────────────────────────────── */
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* ─── SCROLLBAR ───────────────────────────────── */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="logo">nate.moll</div>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#research">research</a>
+      <a href="#publications">publications</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top: none; padding-top: 90px;">
+    <div class="meta-label">
+      undergraduate researcher
+      <span class="pulse"></span>
+      available fall 2027
+    </div>
+
+    <h1>
+      Building systems that <em>listen</em> to molecules <br>
+      and <em>understand</em> what they say.
+    </h1>
+
+    <p class="hero-lede">
+      I'm <strong>Nathaniel Moll</strong> — a senior at Liberty University studying biochemistry and physics,
+      and an aspiring PhD student at the interface of <strong>computational biophysics</strong>,
+      <strong>machine learning for molecular systems</strong>, and <strong>sensor-driven experimental science</strong>.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#research" class="btn btn-primary">view research <span class="arrow">→</span></a>
+      <a href="Nathaniel_Moll_CV.pdf" class="btn" target="_blank" rel="noopener">download CV (pdf)</a>
+      <a href="mailto:ncmoll45@gmail.com" class="btn">get in touch</a>
+    </div>
+
+    <div class="focus-block">
+      <div class="config">
+<span class="c"># current_focus.yaml</span><br>
+<span class="k">institution</span><span class="v">:</span> <span class="v">Liberty University</span> <span class="c"># B.S. Biochem &amp; Mol. Biol., Physics minor, GPA 3.9</span><br>
+<span class="k">graduating</span><span class="v">:</span> <span class="v">May 2027</span><br>
+<span class="k">upcoming</span><span class="v">:</span> <span class="v">SULI @ Oak Ridge National Lab</span> <span class="c"># Summer 2026</span><br>
+<span class="k">interests</span><span class="v">:</span><br>
+&nbsp;&nbsp;<span class="v">- ML for molecular structure &amp; dynamics</span><br>
+&nbsp;&nbsp;<span class="v">- biosensor design &amp; signal characterization</span><br>
+&nbsp;&nbsp;<span class="v">- multi-sensor data fusion</span><br>
+<span class="k">status</span><span class="v">:</span> <span class="v">seeking PhD positions, Fall 2027 entry</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / STATEMENT -->
+  <section id="about">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Research <em>statement</em></h2>
+      <span class="section-sub">// why I do this</span>
+    </div>
+
+    <div class="statement reveal">
+      <p>
+        My path into science has been unusually wide on purpose. I started in wet-lab biochemistry —
+        synthesizing molecularly imprinted polymers and characterizing DNA–metal ion interactions —
+        and kept being pulled toward the places where <span class="highlight">the data got hard</span>:
+        noisy light-scattering signals, nanoparticle populations too polydisperse for classical fits,
+        binding curves that required new assays to resolve. Those problems taught me that
+        good experimental science increasingly lives downstream, in the analysis.
+      </p>
+      <p>
+        So I started building the analysis myself. I wrote unsupervised ML pipelines for DLS data,
+        taught myself neural network fundamentals, and began thinking about molecular systems
+        the way a systems engineer thinks about a vehicle: as interacting signals, states, and transitions
+        that can be <em>modeled</em>, not just <em>measured</em>. My upcoming SULI at Oak Ridge —
+        working on multi-sensor fusion for scene understanding — is a deliberate step into that engineering mindset.
+      </p>
+      <p>
+        For graduate school, I'm looking for a group working on
+        <span class="highlight">computational approaches to molecular and biophysical systems</span> —
+        protein dynamics, biosensor modeling, molecular simulation, ML for structural biology,
+        or adjacent work — especially where the computation is tightly coupled to real experimental data.
+        I want to keep one hand in each.
+      </p>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="research">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Research &amp; <em>projects</em></h2>
+      <span class="section-sub">// 2023 — present</span>
+    </div>
+
+    <div class="projects">
+
+      <!-- ORNL -->
+      <div class="project reveal">
+        <div class="project-meta">
+          <span class="date">2026.05 — 2026.07</span>
+          <span class="inst">Oak Ridge National Laboratory</span>
+          <span class="inst">Oak Ridge, TN</span>
+          <div class="tags">
+            <span class="tag">SULI</span>
+            <span class="tag">DOE</span>
+            <span class="tag">ML</span>
+            <span class="tag">sensors</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            Multi-sensor scene fusion for vehicle identification
+            <span class="status status-upcoming">upcoming</span>
+          </h3>
+          <p>
+            Awarded the DOE Science Undergraduate Laboratory Internship (SULI) under the
+            Nuclear Science &amp; Advanced Technology Section. The project compares LiDAR,
+            stereo depth-cameras, and neuromorphic sensors for extracting geometric and
+            motion-based features used in vehicle identification and re-identification.
+          </p>
+          <ul>
+            <li>Applied ML algorithms for cross-modal feature extraction and characterization</li>
+            <li>Analyses intended to support peer-reviewed publication</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- fMIP -->
+      <div class="project reveal">
+        <div class="project-meta">
+          <span class="date">2025.08 — present</span>
+          <span class="inst">Liberty University</span>
+          <span class="inst">Lynchburg, VA</span>
+          <div class="tags">
+            <span class="tag">polymer synth</span>
+            <span class="tag">PFAS</span>
+            <span class="tag">sensors</span>
+            <span class="tag">NMR / IR</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            Fluorinated molecularly imprinted polymers for PFAS detection
+            <span class="status status-active">active</span>
+          </h3>
+          <p>
+            Working in a 5-member synthesis group designing fluorinated MIPs (fMIPs) that
+            selectively bind PFAS contaminants, toward high-sensitivity chemical sensors.
+          </p>
+          <ul>
+            <li><strong>Improved reaction yield to 75%</strong> in key steps by optimizing extraction and wash cycles</li>
+            <li>Designed flash-chromatography setups to remove residual water and contaminants</li>
+            <li>Characterized novel compounds by IR and NMR to verify structure and purity</li>
+            <li>Presented at a regional conference; awarded a <strong>$1,000 research grant</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- UMiss REU -->
+      <div class="project reveal">
+        <div class="project-meta">
+          <span class="date">2025.05 — 2025.07</span>
+          <span class="inst">University of Mississippi</span>
+          <span class="inst">Oxford, MS — NSF REU</span>
+          <div class="tags">
+            <span class="tag">biophysics</span>
+            <span class="tag">DLS</span>
+            <span class="tag">unsupervised ML</span>
+            <span class="tag">SEM</span>
+            <span class="tag">fluorometry</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            Hg²⁺-induced DNA nanoparticle formation &amp; binding dynamics
+            <span class="status status-complete">completed</span>
+          </h3>
+          <p>
+            Investigated how mercury ions drive nanoparticle assembly with short DNA fragments —
+            characterizing binding dynamics and nanoparticle morphology for biomaterials and
+            biosensing applications.
+          </p>
+          <ul>
+            <li>Ran <strong>500+ DLS assays</strong> on mercury–DNA samples</li>
+            <li>Independently built an <strong>unsupervised ML pipeline</strong> to analyze noisy, complex DLS signals — revealing size distributions too wide for classical DLS fitting</li>
+            <li>Assembled an SEM protocol to directly visualize DNA nanoparticles; imagery confirmed the ML-derived size distributions</li>
+            <li>Designed spectrofluorometric assays that resolved a gap in the literature: determined a <strong>3:1 Hg:DNA binding ratio</strong>, a <strong>14.4 µM K<sub>d</sub></strong>, and a <strong>2.81 cooperativity constant</strong></li>
+            <li>Delivered a 15-minute final talk to 30+ faculty and students</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- USSC -->
+      <div class="project reveal">
+        <div class="project-meta">
+          <span class="date">2024.05 — 2024.08</span>
+          <span class="inst">United Safety &amp; Survivability Corp.</span>
+          <span class="inst">Exton, PA</span>
+          <div class="tags">
+            <span class="tag">R&amp;D</span>
+            <span class="tag">SolidWorks</span>
+            <span class="tag">prototyping</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            Engineering R&amp;D internship — seat suspensions &amp; fire suppression prototyping
+            <span class="status status-complete">completed</span>
+          </h3>
+          <p>
+            Led end-to-end development of a portable vehicle fire-suppression sales demo
+            and ran validation testing on driver seat suspension systems.
+          </p>
+          <ul>
+            <li>Ran high-frequency shake tests to flag faulty shock absorbers and electronics against company damping specs</li>
+            <li>Designed a new air-canister bracket that reduced a fabrication bottleneck and cut seat weight</li>
+            <li>Re-engineered the demo unit in SolidWorks with full ASME Y14.5-compliant drawings for manufacturing</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- NASA HERC -->
+      <div class="project reveal">
+        <div class="project-meta">
+          <span class="date">2023.08 — 2025.05</span>
+          <span class="inst">Liberty U. School of Engineering</span>
+          <span class="inst">NASA HERC</span>
+          <div class="tags">
+            <span class="tag">mech design</span>
+            <span class="tag">team lead</span>
+            <span class="tag">systems integ.</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            NASA Human Exploration Rover Challenge — suspension subteam leader
+            <span class="status status-complete">completed</span>
+          </h3>
+          <p>
+            Led the suspension subteam on a 20+ person rover competition team,
+            driving end-to-end design, manufacturing, and assembly under NASA's review process.
+          </p>
+          <ul>
+            <li>Delivered a suspension capable of <strong>7 inches of wheel travel</strong>, resolving maneuverability risk on rough terrain</li>
+            <li>Coordinated systems integration and interface control across multiple subteams</li>
+            <li>Presented <strong>two Operational Readiness Reviews</strong> to NASA engineers</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section id="publications">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Presentations &amp; <em>publications</em></h2>
+      <span class="section-sub">// conference output</span>
+    </div>
+
+    <div class="pubs">
+
+      <div class="pub reveal">
+        <div class="pub-year">2025</div>
+        <div>
+          <div class="pub-title">Multipartite Synthesis of Molecularly Imprinted Polymers for PFAS Detection</div>
+          <div class="pub-venue">Virginia Academy of Science Annual Meeting, Virginia State University</div>
+        </div>
+        <span class="pub-type">poster</span>
+      </div>
+
+      <div class="pub reveal">
+        <div class="pub-year">2025</div>
+        <div>
+          <div class="pub-title">The Effects of Mercury Ions on Secondary Structures Formed by T-Rich DNA</div>
+          <div class="pub-venue">NSF Research Experience for Undergraduates, University of Mississippi</div>
+        </div>
+        <span class="pub-type">oral</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Get in <em>touch</em></h2>
+      <span class="section-sub">// best way to reach me</span>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-card reveal">
+        <div class="label">email · primary</div>
+        <a href="mailto:ncmoll45@gmail.com">ncmoll45@gmail.com</a>
+        <div class="note">response within 24–48 hours</div>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="label">curriculum vitae</div>
+        <a href="Nathaniel_Moll_CV.pdf" target="_blank" rel="noopener">Nathaniel_Moll_CV.pdf →</a>
+        <div class="note">updated 2026 · federal format</div>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="label">github</div>
+        <a href="https://github.com/Darthmoll12" target="_blank" rel="noopener">@Darthmoll12</a>
+        <div class="note">code &amp; ML pipelines (update link)</div>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="label">linkedin</div>
+        <a href="https://www.linkedin.com/in/nathaniel-moll-6b1384312/" target="_blank" rel="noopener">linkedin.com/in/nathaniel-moll</a>
+        <div class="note">professional network (update link)</div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:16px;">
+    <span class="sig">© 2026 Nathaniel Moll · Lynchburg, VA</span>
+    <span>built with care · last updated <span id="lastmod"></span></span>
+  </div>
+</footer>
+
+<script>
+  // Last-modified date
+  document.getElementById('lastmod').textContent =
+    new Date().toISOString().slice(0, 10);
+
+  // Intersection-observer reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
