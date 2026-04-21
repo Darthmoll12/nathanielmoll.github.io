@@ -465,6 +465,58 @@
   }
   footer .sig { color: var(--ink-dim); }
 
+  /* ─── ARROW LIST (reusable) ─────────────────── */
+  .arrow-list {
+    list-style: none;
+    padding-left: 0;
+    max-width: 820px;
+  }
+  .arrow-list li {
+    color: var(--ink);
+    font-size: 15.5px;
+    padding: 14px 0 14px 28px;
+    position: relative;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .arrow-list li:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+  .arrow-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 14px;
+    transition: transform 0.25s;
+  }
+  .arrow-list li:hover::before {
+    transform: translateX(4px);
+  }
+  .arrow-list li strong {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .arrow-list li .meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-dim);
+    letter-spacing: 0.01em;
+  }
+  .arrow-list li .meta em {
+    color: var(--ink);
+    font-style: italic;
+    font-family: var(--serif);
+    font-size: 13px;
+  }
+  
+
   /* ─── ANIMATIONS ──────────────────────────────── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -537,7 +589,7 @@
     <p class="hero-lede">
       I'm <strong>Nathaniel Moll</strong> — a rising senior at Liberty University majoring in biochemistry and molecular biology and minoring in physics.
       I aim to research and build at the interface of <strong>computational biophysics</strong>,
-      <strong>machine learning for biological systems</strong>, and biosensor development<strong></strong>.
+      <strong>machine learning for biological systems</strong>, and <strong>biosensor development</strong>.
     </p>
 
     <div class="hero-cta">
@@ -555,7 +607,6 @@
 &nbsp;&nbsp;<span class="v">- AI for systems biology &amp; cellular modeling</span><br>
 &nbsp;&nbsp;<span class="v">- Biosensor design &amp; on-chip technologies</span><br>
 &nbsp;&nbsp;<span class="v">- Human health and life support for long-duration space missions</span><br>
-<span class="k">status</span><span class="v">:</span> <span class="v">seeking PhD positions, Fall 2027 entry</span>
       </div>
     </div>
   </section>
@@ -564,7 +615,7 @@
   <section id="about">
     <div class="section-head">
       <span class="section-num">01</span>
-      <h2 class="section-title">Research <em>statement</em></h2>
+      <h2 class="section-title">Personal <em>statement</em></h2>
     </div>
 
     <div class="statement reveal">
@@ -803,17 +854,29 @@
       <span class="section-num">04</span>
       <h2 class="section-title">Publications</h2>
     </div>
-
     <div class="content">
-      <h1>Coming Soon!</h1>
+      <h2>Coming Soon!</h2>
       <p> The below projects are being worked on for future manuscript submission:</p>
     </div>
-
-    <div class="pubs">
-      <div class="pub-title">Neuromorphic Computing for Real-Time Cancer Detection in Liquid Biopsy using Nanopore Sequencing</div>
-      <div class="pub-title">Multipartite Synthesis of Fluorinated Molecularly Imprinted Polymers for PFAS Detection</div>
-      <div class="pub-title">The Effects of Hg²⁺ on Secondary Structures Formed by T-rich DNA</div>
+    <div class="section-head" style="margin-top: 72px; margin-bottom: 32px;">
+      <span class="section-num">—</span>
+      <h3 style="font-family: var(--serif); font-size: 24px; font-weight: 400; letter-spacing: -0.01em;">
+        In <em style="color: var(--accent); font-style: italic;">preparation</em>
+      </h3>
+      <span class="section-sub">// targeted for submission 2026</span>
     </div>
+
+    <ul class="arrow-list">
+      <li>
+        <strong>Neuromorphic Computing for Real-Time Cancer Detection in Liquid Biopsy using Nanopore Sequencing.</strong>
+      </li>
+      <li>
+        <strong>Multipartite Synthesis of Fluorinated Molecularly Imprinted Polymers for PFAS Detection.</strong>
+      </li>
+      <li>
+        <strong>The Effects of Hg²⁺ on Secondary Structures Formed by T-rich DNA</strong>
+      </li>
+    </ul>
   </section>
 
   <!-- CONTACT -->
